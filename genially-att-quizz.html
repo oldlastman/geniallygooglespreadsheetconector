@@ -60,7 +60,7 @@ function getOtherElementIngroup(knownElementId){
 }
 function getElementTxt(knownElementId){
   let parentElement = getOtherElementIngroup(knownElementId);
-  actualTxt = parentElement.querySelector('.genially-view-text div').textContent;
+  let actualTxt = parentElement.querySelector('.genially-view-text div').textContent;
   return actualTxt;
 }
 function setElementTxt(knownElementId, newTxt){
@@ -92,7 +92,7 @@ function initGame(){
   //btnStartButton.style.visibility = 'hidden';
   hideInterfaceElements();
   setCssToParent('startButton', 'visibility', 'hidden');
-  console.log('oli');
+
   let questionsData = getSpreadsheetData();
   let randomQuestionId = getRandoQuestion(questionsData);
   console.log(randomQuestionId);//ver id
