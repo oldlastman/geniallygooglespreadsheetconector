@@ -1,0 +1,161 @@
+
+<div id="urlgooglespreadsheet">url Spreadsheet</div><script>
+  //Detectar la url de la  hoja spreadsheet
+
+  window.onload = function(){
+  hideInterfaceElements();
+  showInfo();
+ }     
+  
+
+function showInfo() {
+  
+  let urlGoogleSpreadsheet = document.getElementById('urlgooglespreadsheet').parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('.genially-view-text div').textContent;
+    let urlArray = urlGoogleSpreadsheet.split('/');
+  
+    var ssid = urlArray[5];
+          //const output = document.querySelector('.output');
+          const url = 'https://docs.google.com/spreadsheets/d/';
+          //const ssid = '1Rtsre4cRNIDALncWfA7wcdEtZjcKPF99tjuiAhmubGE';
+          const query = '/gviz/tq?';
+          
+          const endpoint1 = `${url}${ssid}${query}`;
+          //output.textContent = endpoint1;
+          
+          fetch(endpoint1)
+          .then(res => res.text())
+          .then(rep => {
+            
+            const respuesta = rep.substring(47).slice(0, -2);
+            //console.log(respuesta);
+            document.getElementById('urlgooglespreadsheet').dataset.attQuestions=respuesta;
+            addClickToParent('startButton','initGame');
+            addClickToParent('next','initGame');
+          })
+  
+        }
+  
+function getSpreadsheetData(){  
+  const jsonData = JSON.parse(document.getElementById('urlgooglespreadsheet').dataset.attQuestions);
+  var rowsArray = [];
+  jsonData.table.rows.forEach(function(row){
+      var rowArray = [];
+      row.c.forEach(function(prop){ rowArray.push(prop.v); });
+      rowsArray.push(rowArray);
+  });
+  
+  return rowsArray;
+}
+  
+
+function getOtherElementIngroup(knownElementId){
+  document.getElementById(knownElementId).style.display = 'none';
+  let groupParentElement = document.getElementById(knownElementId).parentNode.parentNode.parentNode.parentNode.parentNode;
+  return groupParentElement;
+  
+}
+function setElementTxt(knownElementId, newTxt){
+  let parentElement = getOtherElementIngroup(knownElementId);
+  if(newTxt !=''){
+    parentElement.style.visibility ='visible'
+    parentElement.querySelector('.genially-view-text div').textContent =  newTxt;
+  }else{
+    parentElement.style.visibility ='hidden';
+  }
+}
+function setElemetData(knownElementId, dataName, dataContent){
+  let parentElement = getOtherElementIngroup(knownElementId);
+  parentElement.dataset[dataName] = dataContent;
+}
+function addClickToParent(knownElementId, funcName){
+  let parentElement = getOtherElementIngroup(knownElementId);
+  parentElement.addEventListener("click", eval(funcName), false);
+  
+}
+function setCssToParent(knownElementId, cssProperty, cssValue){
+  let parentElement = getOtherElementIngroup(knownElementId);
+  parentElement.style[cssProperty] = cssValue;
+}
+
+function initGame(){
+  //ocultar botón empezar
+  //let btnStartButton = getOtherElementIngroup('startButton');
+  //btnStartButton.style.visibility = 'hidden';
+  hideInterfaceElements();
+  setCssToParent('startButton', 'visibility', 'hidden');
+  console.log('oli');
+  let questionsData = getSpreadsheetData();
+  let randomQuestionId = getRandoQuestion(questionsData);
+  console.log(randomQuestionId);//ver id
+  //cargar preguntas
+  addAnswerEvents();
+  setQuestionAnswers(questionsData[randomQuestionId]);
+  //eliminar pregunta realizada
+  questionsData.splice(randomQuestionId,1);
+  console.log(questionsData);//ver resto
+
+}
+
+function setQuestionAnswers(questionData){
+  console.log(questionData);
+  setElementTxt('pregunta', questionData[0]);
+  setElemetData('pregunta','ok',questionData[5]);
+  setElementTxt('respuesta1', questionData[1]);
+  setElementTxt('respuesta2', questionData[2]);
+  setElementTxt('respuesta3', questionData[3]);
+  setElementTxt('respuesta4', questionData[4]);
+}
+function addAnswerEvents(){
+  addClickToParent('respuesta1', 'evalAnswer');
+  let element1 = getOtherElementIngroup('respuesta1');
+  element1.style.cursor = 'pointer';
+
+  addClickToParent('respuesta2', 'evalAnswer');
+  let element2 = getOtherElementIngroup('respuesta2');
+  element2.style.cursor = 'pointer';
+
+  addClickToParent('respuesta3', 'evalAnswer');
+  let element3 = getOtherElementIngroup('respuesta3');
+  element3.style.cursor = 'pointer';
+
+  addClickToParent('respuesta4', 'evalAnswer');
+  let element4 = getOtherElementIngroup('respuesta4');
+  element4.style.cursor = 'pointer';
+  
+}
+function getRandoQuestion(questionsData){
+  return Math.floor(Math.random()*questionsData.length)
+}
+function evalAnswer(event){
+  let question = getOtherElementIngroup('pregunta');
+  let okAnswer = question.dataset.ok;
+
+  let selectedAnswer = event.target.querySelector(".respuesta").dataset.respuesta;
+  
+  if (selectedAnswer == okAnswer){
+    okFeedBack();
+  }else{
+    koFeedBack();
+  }
+}
+
+function okFeedBack(){
+  console.log('CORRECTISISIO!!!');
+  setCssToParent('feedbackOk', 'visibility', 'visible');
+  setCssToParent('next', 'visibility', 'visible');
+  setCssToParent('feedbackKo', 'visibility', 'hidden');
+}
+
+function koFeedBack(){
+  console.log('WTF!!! Deberías saberlo');
+  setCssToParent('feedbackOk', 'visibility', 'hidden');
+  setCssToParent('next', 'visibility', 'hidden');
+  setCssToParent('feedbackKo', 'visibility', 'visible');
+}
+
+function hideInterfaceElements(){
+  setCssToParent('feedbackOk', 'visibility', 'hidden');
+  setCssToParent('feedbackKo', 'visibility', 'hidden');
+  setCssToParent('next', 'visibility', 'hidden');
+}
+</script>
