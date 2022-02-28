@@ -21,20 +21,17 @@ function getSpreadSheetAndInitButtons() {
     let urlArray = urlGoogleSpreadsheet.split('/');
   
     var ssid = urlArray[5];
-          //const output = document.querySelector('.output');
           const url = 'https://docs.google.com/spreadsheets/d/';
-          //const ssid = '1Rtsre4cRNIDALncWfA7wcdEtZjcKPF99tjuiAhmubGE';
           const query = '/gviz/tq?';
           
           const endpoint1 = `${url}${ssid}${query}`;
-          //output.textContent = endpoint1;
           
           fetch(endpoint1)
           .then(res => res.text())
           .then(rep => {
             
             const respuesta = rep.substring(47).slice(0, -2);
-            //console.log(respuesta);
+
             document.getElementById('urlgooglespreadsheet').dataset.attQuestions=respuesta;
             addClickToParent('startButton','initGame');
             addClickToParent('next','initGame');
