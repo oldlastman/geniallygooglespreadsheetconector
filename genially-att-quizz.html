@@ -11,12 +11,12 @@
 
   window.onload = function(){
   hideInterfaceElements();
-  showInfo();
+  getSpreadSheetAndInitButtons();
  }     
   
 
-function showInfo() {
-  
+function getSpreadSheetAndInitButtons() {
+// Toma los datos desde hoja calculo google indicada y prepara los botones de empezar y siguiente
   let urlGoogleSpreadsheet = document.getElementById('urlgooglespreadsheet').parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('.genially-view-text div').textContent;
     let urlArray = urlGoogleSpreadsheet.split('/');
   
