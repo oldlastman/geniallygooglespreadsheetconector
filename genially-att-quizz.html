@@ -17,7 +17,7 @@
 
 function getSpreadSheetAndInitButtons() {
 // Toma los datos desde hoja calculo google indicada y prepara los botones de empezar y siguiente
-  let urlGoogleSpreadsheet = document.getElementById('urlgooglespreadsheet').parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('.genially-view-text div').textContent;
+  let urlGoogleSpreadsheet = getElementTxt('urlgooglespreadsheet');
     let urlArray = urlGoogleSpreadsheet.split('/');
   
     var ssid = urlArray[5];
@@ -57,6 +57,11 @@ function getOtherElementIngroup(knownElementId){
   let groupParentElement = document.getElementById(knownElementId).parentNode.parentNode.parentNode.parentNode.parentNode;
   return groupParentElement;
   
+}
+function getElementTxt(knownElementId){
+  let parentElement = getOtherElementIngroup(knownElementId);
+  actualTxt = parentElement.querySelector('.genially-view-text div').textContent;
+  return actualTxt;
 }
 function setElementTxt(knownElementId, newTxt){
   let parentElement = getOtherElementIngroup(knownElementId);
